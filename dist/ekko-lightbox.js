@@ -48,8 +48,8 @@ var Lightbox = (function ($) {
 			key: 'Default',
 
 			/**
-       Class properties:
-   	 _$element: null -> the <a> element currently being displayed
+   	    Class properties:
+   		 _$element: null -> the <a> element currently being displayed
     _$modal: The bootstrap modal generated
        _$modalDialog: The .modal-dialog
        _$modalContent: The .modal-content
@@ -60,13 +60,13 @@ var Lightbox = (function ($) {
     _$lightboxContainerTwo: Container of the second lightbox element
     _$lightboxBody: First element in the container
     _$modalArrows: The overlayed arrows container
-   	 _$galleryItems: Other <a>'s available for this gallery
+   		 _$galleryItems: Other <a>'s available for this gallery
     _galleryName: Name of the current data('gallery') showing
     _galleryIndex: The current index of the _$galleryItems being shown
-   	 _config: {} the options for the modal
+   		 _config: {} the options for the modal
     _modalId: unique id for the current lightbox
     _padding / _border: CSS properties for the modal container; these are used to calculate the available space for the content
-   	 */
+   		 */
 
 			get: function get() {
 				return Default;
@@ -74,7 +74,7 @@ var Lightbox = (function ($) {
 		}]);
 
 		function Lightbox($element, config) {
-			var _this = this;
+			var _this2 = this;
 
 			_classCallCheck(this, Lightbox);
 
@@ -127,41 +127,40 @@ var Lightbox = (function ($) {
 
 				// add the directional arrows to the modal
 				if (this._config.showArrows && this._$galleryItems.length > 1) {
-					this._$lightboxContainer.append('<div class="ekko-lightbox-nav-overlay"><a href="#">' + this._config.leftArrow + '</a><a href="#">' + this._config.rightArrow + '</a></div>');
-					this._$modalArrows = this._$lightboxContainer.find('div.ekko-lightbox-nav-overlay').first();
-					this._$lightboxContainer.on('click', 'a:first-child', function (event) {
-						event.preventDefault();
-						return _this.navigateLeft();
-					});
-					this._$lightboxContainer.on('click', 'a:last-child', function (event) {
-						event.preventDefault();
-						return _this.navigateRight();
+					this._$lightboxContainer.append('<div class="ekko-lightbox-nav ekko-lightbox-nav-left"><a href="#">' + this._config.leftArrow + '</a></div>');
+					this._$lightboxContainer.append('<div class="ekko-lightbox-nav ekko-lightbox-nav-right"><a href="#">' + this._config.rightArrow + '</a></div>');
+					this._$modalArrows = this._$lightboxContainer.find('div.ekko-lightbox-nav');
+					this._$modalArrows.each(function (index, el) {
+						$(el).on('click', 'a', function (event) {
+							event.preventDefault();
+							return $(el).attr('class').match(/left/) ? _this.navigateLeft() : _this.navigateRight();
+						});
 					});
 					this.updateNavigation();
 				}
 			}
 
 			this._$modal.on('show.bs.modal', this._config.onShow.bind(this)).on('shown.bs.modal', function () {
-				_this._toggleLoading(true);
-				_this._handle();
-				return _this._config.onShown.call(_this);
+				_this2._toggleLoading(true);
+				_this2._handle();
+				return _this2._config.onShown.call(_this2);
 			}).on('hide.bs.modal', this._config.onHide.bind(this)).on('hidden.bs.modal', function () {
-				if (_this._galleryName) {
+				if (_this2._galleryName) {
 					$(document).off('keydown.ekkoLightbox');
 					$(window).off('resize.ekkoLightbox');
 				}
-				_this._$modal.remove();
-				return _this._config.onHidden.call(_this);
+				_this2._$modal.remove();
+				return _this2._config.onHidden.call(_this2);
 			}).modal(this._config);
 
 			$(window).on('resize.ekkoLightbox', function () {
-				_this._resize(_this._wantedWidth, _this._wantedHeight);
+				_this2._resize(_this2._wantedWidth, _this2._wantedHeight);
 			});
 			this._$lightboxContainer.on('touchstart', function () {
-				_this._touchstartX = event.changedTouches[0].screenX;
+				_this2._touchstartX = event.changedTouches[0].screenX;
 			}).on('touchend', function () {
-				_this._touchendX = event.changedTouches[0].screenX;
-				_this._swipeGesure();
+				_this2._touchendX = event.changedTouches[0].screenX;
+				_this2._swipeGesure();
 			});
 		}
 
@@ -269,7 +268,7 @@ var Lightbox = (function ($) {
 		}, {
 			key: '_containerToUse',
 			value: function _containerToUse() {
-				var _this2 = this;
+				var _this3 = this;
 
 				// if currently showing an image, fade it out and remove
 				var $toUse = this._$lightboxBodyTwo;
@@ -282,11 +281,13 @@ var Lightbox = (function ($) {
 
 				$current.removeClass('in show');
 				setTimeout(function () {
-					if (!_this2._$lightboxBodyTwo.hasClass('in')) _this2._$lightboxBodyTwo.empty();
-					if (!_this2._$lightboxBodyOne.hasClass('in')) _this2._$lightboxBodyOne.empty();
+					if (!_this3._$lightboxBodyTwo.hasClass('in')) _this3._$lightboxBodyTwo.empty();
+					if (!_this3._$lightboxBodyOne.hasClass('in')) _this3._$lightboxBodyOne.empty();
 				}, 500);
 
 				$toUse.addClass('in show');
+				$toUse.css('z-index', '1');
+				$current.css('z-index', '0');
 				return $toUse;
 			}
 		}, {
@@ -464,7 +465,7 @@ var Lightbox = (function ($) {
 		}, {
 			key: '_loadRemoteContent',
 			value: function _loadRemoteContent(url, $containerForElement) {
-				var _this3 = this;
+				var _this4 = this;
 
 				var width = this._$element.data('width') || 560;
 				var height = this._$element.data('height') || 560;
@@ -476,7 +477,7 @@ var Lightbox = (function ($) {
 				// local ajax can be loaded into the container itself
 				if (!disableExternalCheck && !this._isExternal(url)) {
 					$containerForElement.load(url, $.proxy(function () {
-						return _this3._$element.trigger('loaded.bs.modal');l;
+						return _this4._$element.trigger('loaded.bs.modal');l;
 					}));
 				} else {
 					$containerForElement.html('<iframe src="' + url + '" frameborder="0" allowfullscreen></iframe>');
@@ -527,7 +528,7 @@ var Lightbox = (function ($) {
 		}, {
 			key: '_preloadImage',
 			value: function _preloadImage(src, $containerForImage) {
-				var _this4 = this;
+				var _this5 = this;
 
 				$containerForImage = $containerForImage || false;
 
@@ -537,7 +538,7 @@ var Lightbox = (function ($) {
 
 						// if loading takes > 200ms show a loader
 						var loadingTimeout = setTimeout(function () {
-							$containerForImage.append(_this4._config.loadingMessage);
+							$containerForImage.append(_this5._config.loadingMessage);
 						}, 200);
 
 						img.onload = function () {
@@ -551,15 +552,15 @@ var Lightbox = (function ($) {
 							image.css('width', '100%');
 
 							$containerForImage.html(image);
-							if (_this4._$modalArrows) _this4._$modalArrows.css('display', ''); // remove display to default to css property
+							if (_this5._$modalArrows) _this5._$modalArrows.css('display', ''); // remove display to default to css property
 
-							_this4._resize(img.width, img.height);
-							_this4._toggleLoading(false);
-							return _this4._config.onContentLoaded.call(_this4);
+							_this5._resize(img.width, img.height);
+							_this5._toggleLoading(false);
+							return _this5._config.onContentLoaded.call(_this5);
 						};
 						img.onerror = function () {
-							_this4._toggleLoading(false);
-							return _this4._error(_this4._config.strings.fail + ('  ' + src));
+							_this5._toggleLoading(false);
+							return _this5._error(_this5._config.strings.fail + ('  ' + src));
 						};
 					})();
 				}
@@ -639,14 +640,14 @@ var Lightbox = (function ($) {
 		}], [{
 			key: '_jQueryInterface',
 			value: function _jQueryInterface(config) {
-				var _this5 = this;
+				var _this6 = this;
 
 				config = config || {};
 				return this.each(function () {
-					var $this = $(_this5);
+					var $this = $(_this6);
 					var _config = $.extend({}, Lightbox.Default, $this.data(), typeof config === 'object' && config);
 
-					new Lightbox(_this5, _config);
+					new Lightbox(_this6, _config);
 				});
 			}
 		}]);

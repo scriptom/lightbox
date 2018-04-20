@@ -21,48 +21,50 @@
     height: 100%;
   }
 
-  &-nav-overlay {
-    z-index:100;
-    position: absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    display: flex;
+  &-nav {
+	height: 100%;
+	width: 60px;
+	text-align: center;
+	position: relative;
 
     a {
-      flex: 1;
-      display:flex;
-      align-items: center;
-
-      opacity: 0;
-      transition: opacity 0.5s;
-      color: #fff;
+      opacity:0;
+      transition:opacity .5s;
+      color:#fff;
       font-size:30px;
-      z-index:100;
-
-      > * {
-        flex-grow:1;
-        &:focus {
-          outline: none;
-        }
-      }
-      span {
-        padding:0 30px;
-      }
-      &:last-child span {
-        text-align: right;
+      z-index:1;
+      position: absolute;
+      top: calc(~"50% - 25px");
+      border-radius: 100%;
+      height: 50px;
+      width: 50px;
+      text-align: center;
+      background-color: rgba(100, 100, 100, 0.6);
+      &:focus {
+        outline: none;
       }
       &:hover {
         text-decoration: none;
-      }
-      &:focus {
-        outline: none;
       }
       &.disabled {
         cursor: default;
         visibility: hidden;
       }
+    }
+    &-left {
+    	float: left;
+        a {
+          left: 5px;
+        }
+    }
+    &-right {
+    	float: right;
+        a {
+          right: 5px;
+        }
+    }
+   	&:hover a {
+    	opacity: 1;
     }
   }
 

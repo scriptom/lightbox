@@ -111,16 +111,15 @@ const Lightbox = (($) => {
 
 				// add the directional arrows to the modal
 				if (this._config.showArrows && this._$galleryItems.length > 1) {
-					this._$lightboxContainer.append(`<div class="ekko-lightbox-nav-overlay"><a href="#">${this._config.leftArrow}</a><a href="#">${this._config.rightArrow}</a></div>`)
-					this._$modalArrows = this._$lightboxContainer.find('div.ekko-lightbox-nav-overlay').first()
-					this._$lightboxContainer.on('click', 'a:first-child', event => {
-						event.preventDefault()
-						return this.navigateLeft()
-					})
-					this._$lightboxContainer.on('click', 'a:last-child', event => {
-						event.preventDefault()
-						return this.navigateRight()
-					})
+					this._$lightboxContainer.append(`<div class="ekko-lightbox-nav ekko-lightbox-nav-left"><a href="#">${this._config.leftArrow}</a></div>`)
+					this._$lightboxContainer.append(`<div class="ekko-lightbox-nav ekko-lightbox-nav-right"><a href="#">${this._config.rightArrow}</a></div>`)
+					this._$modalArrows = this._$lightboxContainer.find('div.ekko-lightbox-nav')
+					this._$modalArrows.each(function(index, el) {
+						$(el).on('click', 'a', function(event) {
+							event.preventDefault()
+							return $(el).attr('class').match(/left/) ? _this.navigateLeft() : _this.navigateRight()
+						});
+					});
 					this.updateNavigation()
 				}
 			}
@@ -291,6 +290,8 @@ const Lightbox = (($) => {
 			}, 500)
 
 			$toUse.addClass('in show')
+			$toUse.css('z-index', '1');
+			$current.css('z-index', '0');
 			return $toUse
 		}
 
