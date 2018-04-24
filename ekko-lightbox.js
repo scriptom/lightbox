@@ -86,7 +86,7 @@ const Lightbox = (($) => {
 
 			let header = `<div class="modal-header${this._config.title || this._config.alwaysShowClose ? '' : ' hide'}">`+(this._isBootstrap3 ? btn+h4 : h4+btn)+`</div>`;
 			let footer = `<div class="modal-footer${this._config.footer ? '' : ' hide'}">${this._config.footer || "&nbsp;"}</div>`;
-			let body = '<div class="modal-body row"><div class="ekko-lightbox-container"><div class="ekko-lightbox-item fade in show"></div><div class="ekko-lightbox-item fade"></div></div></div>'
+			let body = '<div class="modal-body"><div class="ekko-lightbox-container"><div class="ekko-lightbox-item fade in show"></div><div class="ekko-lightbox-item fade"></div></div></div>'
 			let dialog = `<div class="modal-dialog" role="document"><div class="modal-content">${header}${body}${footer}</div></div>`
 			$(this._config.doc.body).append(`<div id="${this._modalId}" class="ekko-lightbox modal fade" tabindex="-1" tabindex="-1" role="dialog" aria-hidden="true">${dialog}</div>`)
 
@@ -119,7 +119,7 @@ const Lightbox = (($) => {
 					this._$albumContainer = $('.ekko-album-container')
 					for (let item of this._$galleryItems) {
 						this._$albumContainer.append(`<div class="col-4">${item}</div>`)
-						item..on('click', function(event) {
+						item.on('click', function(event) {
 							event.preventDefault();
 							this.navigateTo(this._galleryIndex)
 						});

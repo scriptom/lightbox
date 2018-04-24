@@ -34,6 +34,7 @@ var Lightbox = (function ($) {
 			fail: 'Failed to load image:',
 			type: 'Could not detect remote target type. Force the type using data-type'
 		},
+		albumMode: false, // scr1ptom - Decides wether show album-like display on galleries
 		doc: document, // if in an iframe can specify top.document
 		onShow: function onShow() {},
 		onShown: function onShown() {},
@@ -125,6 +126,42 @@ var Lightbox = (function ($) {
 				this._galleryIndex = this._$galleryItems.index(this._$element);
 				$(document).on('keydown.ekkoLightbox', this._navigationalBinder.bind(this));
 
+				if (this._config.albumMode) {
+					// scr1ptom - When we are dealing with galleries, let's prepare everything for album mode
+					this._$lightboxContainer.addClass('col-8');
+					this._$modalBody.addClass('row').append('<div class="ekko-album-container col-4>"');
+
+					// Fill album container
+					this._$albumContainer = $('.ekko-album-container');
+					var _iteratorNormalCompletion = true;
+					var _didIteratorError = false;
+					var _iteratorError = undefined;
+
+					try {
+						for (var _iterator = this._$galleryItems[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+							var item = _step.value;
+
+							this._$albumContainer.append('<div class="col-4">' + item + '</div>');
+							item.on('click', function (event) {
+								event.preventDefault();
+								this.navigateTo(this._galleryIndex);
+							});
+						}
+					} catch (err) {
+						_didIteratorError = true;
+						_iteratorError = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion && _iterator['return']) {
+								_iterator['return']();
+							}
+						} finally {
+							if (_didIteratorError) {
+								throw _iteratorError;
+							}
+						}
+					}
+				}
 				// add the directional arrows to the modal
 				if (this._config.showArrows && this._$galleryItems.length > 1) {
 					this._$lightboxContainer.append('<div class="ekko-lightbox-nav ekko-lightbox-nav-left"><a href="#">' + this._config.leftArrow + '</a></div>');
