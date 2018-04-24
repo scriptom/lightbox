@@ -20,6 +20,7 @@ const Lightbox = (($) => {
 			fail: 'Failed to load image:',
 			type: 'Could not detect remote target type. Force the type using data-type',
 		},
+		albumMode: false, // scr1ptom - Decides wether show album-like display on galleries
 		doc: document, // if in an iframe can specify top.document
 		onShow() {},
 		onShown() {},
@@ -85,7 +86,7 @@ const Lightbox = (($) => {
 
 			let header = `<div class="modal-header${this._config.title || this._config.alwaysShowClose ? '' : ' hide'}">`+(this._isBootstrap3 ? btn+h4 : h4+btn)+`</div>`;
 			let footer = `<div class="modal-footer${this._config.footer ? '' : ' hide'}">${this._config.footer || "&nbsp;"}</div>`;
-			let body = '<div class="modal-body"><div class="ekko-lightbox-container"><div class="ekko-lightbox-item fade in show"></div><div class="ekko-lightbox-item fade"></div></div></div>'
+			let body = '<div class="modal-body row"><div class="ekko-lightbox-container"><div class="ekko-lightbox-item fade in show"></div><div class="ekko-lightbox-item fade"></div></div></div>'
 			let dialog = `<div class="modal-dialog" role="document"><div class="modal-content">${header}${body}${footer}</div></div>`
 			$(this._config.doc.body).append(`<div id="${this._modalId}" class="ekko-lightbox modal fade" tabindex="-1" tabindex="-1" role="dialog" aria-hidden="true">${dialog}</div>`)
 
@@ -109,6 +110,22 @@ const Lightbox = (($) => {
 				this._galleryIndex = this._$galleryItems.index(this._$element)
 				$(document).on('keydown.ekkoLightbox', this._navigationalBinder.bind(this))
 
+				if (this._config.albumMode) {
+					// scr1ptom - When we are dealing with galleries, let's prepare everything for album mode
+					this._$lightboxContainer.addClass('col-8')
+					this._$modalBody.addClass('row').append('<div class="ekko-album-container col-4>"')
+
+					// Fill album container
+					this._$albumContainer = $('.ekko-album-container')
+					for (let item of this._$galleryItems) {
+						this._$albumContainer.append(`<div class="col-4">${item}</div>`)
+						item..on('click', function(event) {
+							event.preventDefault();
+							this.navigateTo(this._galleryIndex)
+						});
+					}
+
+				}
 				// add the directional arrows to the modal
 				if (this._config.showArrows && this._$galleryItems.length > 1) {
 					this._$lightboxContainer.append(`<div class="ekko-lightbox-nav ekko-lightbox-nav-left"><a href="#">${this._config.leftArrow}</a></div>`)
